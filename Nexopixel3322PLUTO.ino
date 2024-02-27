@@ -13,33 +13,39 @@
 #define PIN_NEO_PIXEL 8  // Arduino pin that connects to NeoPixel
 #define NUM_PIXELS 150   // The number of LEDs (pixels) on NeoPixel
 
-#define DELAY_INTERVAL 10  // 250ms pause between each pixel
-
+#define DELAY_INTERVAL 2000  // 250ms pause between each pixel
 Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
+bool intakeIsFull = false;
 
 void setup() {
   NeoPixel.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
+  
+    NeoPixel.setBrightness(1000000);
+    pinMode(40, INPUT);
+}
+
+void setLed(int r, int g, int b){
+  for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {    
+      NeoPixel.setPixelColor(pixel, NeoPixel.Color(r, g, b));   
+  }
+  NeoPixel.show();
 }
 
 void loop() {
-
-  // turn pixels to green one by one with delay between each pixel
-    NeoPixel.setBrightness(255);
-  for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {           // for each pixel
-    NeoPixel.setPixelColor(pixel, NeoPixel.Color(255, 0, 0));  // it only takes effect if pixels.show() is called
-    NeoPixel.show();                                           // send the updated pixel colors to the NeoPixel hardware.
-    delay(DELAY_INTERVAL);                                     // pause between each pixel
+  if(intakeIsFull){
+    setLed(0,255,0);
+    delay(200);
+    setLed(0,0,0);
+    delay(200);
   }
-  for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {           // for each pixel
-    NeoPixel.setPixelColor(pixel, NeoPixel.Color(0, 0, 255));  // it only takes effect if pixels.show() is called
-    NeoPixel.show();                                           // send the updated pixel colors to the NeoPixel hardware.
-    delay(DELAY_INTERVAL);                                     // pause between each pixel
+  else{
+    showLed(0,150,255);
   }
-  for (int bright = 255; bright > 0 ; bright--) {
-    NeoPixel.setBrightness(bright);
-    NeoPixel.show();
+  if(digitalRead(40) == HIGH){
+    intakeIsFull = true;
   }
-  NeoPixel.clear();
-
-
+  else{
+    intakeIsFull = false;
+  }
 }
+
