@@ -21,6 +21,7 @@ void setup() {
   NeoPixel.setBrightness(1000000);
   pinMode(40, INPUT); // Digital port #40 on the Arduino
 }
+
 // method to set and show every LEDS
 void setLed(int r, int g, int b){
   for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {    
@@ -39,7 +40,4 @@ void loop() {
   else{
     showLed(0,150,255);
   }
-
-  
 }
-
